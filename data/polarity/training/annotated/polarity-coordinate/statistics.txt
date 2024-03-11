@@ -1,0 +1,41 @@
+### REPORT (Annotator):
+This dataset contains 76505 sentences, totaling 1355898 tokens. An average of 18 ± 16 tokens were in each sentence.
+A total of 332837 tokens were known by the lexicon.
+On average, 13 ± 12 were unknown per sentence.
+The distribution of sentences by dataset is as follows:
+        archimedes-latinus: 77
+        evalatin-2022: 17745
+        ittb: 26977
+        llct: 9023
+        perseus: 2273
+        proiel: 18689
+        udante: 1721
+
+The distribution of classes is as follows:
+        neutral: 57786
+        mixed: 4178
+        positive: 10427
+        negative: 4114
+
+### REPORT (Splitter):
+We save a dataset with the following statistics:
+        * training:
+                ** positive: 8383
+                ** negative: 3294
+                ** neutral: 46200
+                ** mixed: 3327
+        * validation:
+                ** positive: 999
+                ** negative: 409
+                ** neutral: 5813
+                ** mixed: 430
+        * test:
+                ** positive: 1045
+                ** negative: 411
+                ** neutral: 5773
+                ** mixed: 421
+Totals:
+        * positive: 10427
+        * negative: 4114
+        * neutral: 57786
+        * mixed: 4178

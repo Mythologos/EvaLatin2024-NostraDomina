@@ -1,0 +1,9 @@
+# Expected Files:
+(1) *Odes* dataset (Sprugnoli *et al.* 2023):
+	- Paper: https://journals.openedition.org/ijcol/1125
+	- Dataset: https://github.com/CIRCSE/LT4HALA/blob/master/2024/GoldStandardv1-Horace.tsv
+(2) LatinAffectus-v4 (Sprugnoli *et al.* 2020; Sprugnoli *et al.* 2023):
+	- Papers:
+		* https://aclanthology.org/2020.lrec-1.376
+		* https://journals.openedition.org/ijcol/1125
+	- Lexicon: https://github.com/CIRCSE/LT4HALA/blob/master/2024/LatinAffectusv4.tsv

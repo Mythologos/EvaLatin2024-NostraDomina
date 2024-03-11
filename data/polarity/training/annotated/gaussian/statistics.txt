@@ -1,0 +1,43 @@
+### REPORT (Annotator):
+This dataset contains 76505 sentences, totaling 1355898 tokens. An average of 18 ± 16 tokens were in each sentence.
+The distribution of sentences by dataset is as follows:
+        archimedes-latinus: 77
+        evalatin-2022: 17745
+        ittb: 26977
+        llct: 9023
+        perseus: 2273
+        proiel: 18689
+        udante: 1721
+
+Trial <49>: <{'covariance_type': 'tied', 'init_params': 'kmeans', 'max_iter': 100, 'n_components': 4, 'n_init': 10, 'random_state': 1722157639, 'reg_covar': 1e-05}>.
+Macro-F1 Score: 0.3685300207039338 (current) > 0.32993464052287585 (prior best)
+Best Estimator: <GaussianMixture(covariance_type='tied', n_components=4, n_init=10, random_state=1722157639, reg_covar=1e-05)>...
+
+The distribution of classes is as follows:
+        neutral: 16861
+        positive: 33473
+        mixed: 11838
+        negative: 14333
+
+### REPORT (Splitter):
+We save a dataset with the following statistics:
+        * training:
+                ** positive: 26826
+                ** negative: 11463
+                ** neutral: 13461
+                ** mixed: 9454
+        * validation:
+                ** positive: 3340
+                ** negative: 1455
+                ** neutral: 1675
+                ** mixed: 1181
+        * test:
+                ** positive: 3307
+                ** negative: 1415
+                ** neutral: 1725
+                ** mixed: 1203
+Totals:
+        * positive: 33473
+        * negative: 14333
+        * neutral: 16861
+        * mixed: 11838

@@ -1,0 +1,3 @@
+# Expected Files:
+	- Data [CONLLU only]: https://github.com/mfantoli/ArchimedesLatinus
+		-> Files were renamed to "train" and "test".
