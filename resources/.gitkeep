@@ -1,0 +1,27 @@
+# Expected Files:
+	- CANINE-C:
+		* Paper: https://aclanthology.org/2022.tacl-1.5/
+		* Model: https://huggingface.co/google/canine-c/tree/main
+	- CANINE-S:
+		* Paper: https://aclanthology.org/2022.tacl-1.5/
+		* Model: https://huggingface.co/google/canine-s/tree/main
+	- LaBERTa:
+		* Paper: https://aclanthology.org/2023.acl-long.846/
+		* Model: https://huggingface.co/bowphs/LaBerta/tree/main
+	- Latin BERT:
+		* Paper: https://arxiv.org/abs/2009.10053
+		* Model: https://github.com/dbamman/latin-bert
+			> See `scripts/download.sh` for the model and `models/subword_tokenizer_latin` for the tokenizer.
+	- mBERT:
+		* Paper: https://aclanthology.org/N19-1423/
+		* Model: https://github.com/google-research/bert/blob/master/multilingual.md (BERT-base, Multilingual Cased)
+	- PhilBERTa:
+		* Paper: https://aclanthology.org/2023.acl-long.846/
+		* Model: https://huggingface.co/bowphs/PhilBerta/tree/main
+	- SPhilBERTa:
+		* Paper: https://arxiv.org/abs/2308.12008
+		* Model: https://huggingface.co/bowphs/SPhilBerta/tree/main
+	- word2vec:
+		* Paper: https://aclanthology.org/2021.naacl-main.389/
+		* Model: https://github.com/QuantitativeCriticismLab/NAACL-HLT-2021-Latin-Intertextuality/tree/main/latin-embeddings-comparison/notebooks
+			> The word2vec model was created using the `bamman-w2v-lemma.ipynb` notebook.
