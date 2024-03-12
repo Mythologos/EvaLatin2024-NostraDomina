@@ -7,17 +7,33 @@
 
 ## Summary
 
-...
+This is a repository for the LT4HALA 2024 workshop paper, **"Improving Latin Polarity Detection through Semi-Supervised Data Augmentation."**
+It includes:
+- the automatically-annotated data generated as a part of the paper (see `data/polarity/training`) 
+- the tools applied to generate and process that data, including the novel polarity coordinate clustering method (see `gaussian_annotator.py`, `polarity_annotator.py`, and `polarity_splitter.py`)
+- the process used to train and tune neural networks on this data (see `polarity_detector.py` and `trial_generator.py`)
+We describe the contents of this repository in more detail below, and we highlight our available CLIs as well as any additional information that may be helpful in reproducing our experiments.
 
 ## Contents
 
-...
+Below, we present information about the repository above. 
+This mainly revolves around the CLIs present at the top level of this repository. 
+The CLIs themselves are presented alongside descriptions of them and notes toward reproducing our work.
+The below is further divided into two subsections regarding the initial data creation and dataset splitting (Data) 
+and the hyperparameter tuning as well as the training and evaluation of neural networks (Modeling).
+
+To reproduce our work, some data not innately included in our repository needs to be gathered. 
+Links and references to all this data are present in `.gitkeep` files spread throughout the `data` and `resources` directories. 
+An item's presence in a `.gitkeep` file indicates that it should be placed at that location. 
+The `__init__.py` files under `utils/data/loaders` and `utils/layers/embeddings` provide indications on default filepaths for various elements of our data and pretrained embeddings, respectively.
 
 ### Data
 
+In this section, we present our annotation tools (`gaussian_annotator.py`, `polarity_annotator.py`) as well as our data splitter (`polarity_splitter.py`). 
+
 #### Gaussian Annotator
 
-...
+For our Gaussian annotator, we provide the CLI below:
 
 ```
 >>> python gaussian_annotator.py -h
@@ -49,9 +65,24 @@ options:
                         filepath to labeled data used for training the Gaussian Mixture Model
 ```
 
+The Gaussian annotator tool performs a hyperparameter search for the Gaussian Mixture Model (GMM) similar to the one performed during our experiments. 
+We ran a total of 120 trials with the following hyperparameters and ranges:
+
+- **Covariance Matrix Type**: diagonal (`diag`), full, spherical, tied
+- **Initialization Method**: k-means, k-means++, random-from-data (`random_from_data`)
+
+Each trial had ten different random initializations, and ten different random states were used to control this process. 
+We raised the covariance regularization constant to .00001 to prevent the matrix from having negative values on the diagonal. 
+All trials ran for up to 100 iterations. 
+Due to size of the *Odes* dataset size, trials were both trained and evaluated on that set for their Macro-F1 score; 
+the best GMM, having a tied covariance matrix and being initialized with the k-means algorithm, scored 0.37.
+
+For the dataset produced with this work, we applied all defaults save that we set `--embedding-filepath` to point to `resources/sphilberta`, 
+applying SPhilBERTa embeddings (Riemenschneider and Frank 2023) with polarity coordinate features attached.
+
 #### Polarity Coordinate Annotator
 
-...
+For the polarity coordinate annotator, we provide the CLI below:
 
 ```
 python polarity_annotator.py -h
@@ -74,9 +105,11 @@ options:
                         a flag indicating whether the annotator should report numerical results regarding the data or not (default: False)
 ```
 
+For the dataset produced with this work, we used the `--lexicon-sensitive` flag. All else was set to its defaults.
+
 #### Polarity Splitter
 
-...
+For our data splitting, we used the CLI given below:
 
 ```
 >>> python polarity_splitter.py -h        
@@ -98,11 +131,18 @@ options:
   --strategy {random}   the algorithm used to create the data splits
 ```
 
+We used the default values across the board for our data splitting procedures, 
+save that we changed the file locations according to the annotation result that we were dealing with at the moment.
+
 ### Modeling
+
+In this section, we present our neural network trainer and evaluator (`polarity_detector.py`) and our hyperparameter search script creator (`trial_generator.py`).
 
 #### Polarity Detector
 
-...
+First, we provide the overall interface for the polarity detector. 
+This interface hides most of its argument behind the `mode`---that is, the manner in which the detector is going to be used.
+By doing this, certain arguments are locked to certain uses of the detector, and any incorrectly-applied arguments will throw errors upon being used.
 
 ```
 >>> python polarity_detector.py -h
@@ -115,7 +155,7 @@ mode:
   {train,evaluate,predict}
 ```
 
-training:
+Then, we provide the interface for the `train` mode:
 
 ```
 >>> python polarity_detector.py train -h 
@@ -183,7 +223,7 @@ options:
   --tqdm, --no-tqdm     flag for displaying tqdm-based iterations during processing (default: True)
 ```
 
-evaluation:
+Next, we provide the interface for the `evaluate` mode:
 
 ``` 
 >>> python polarity_detector.py evaluate -h
@@ -224,7 +264,7 @@ options:
   --tqdm, --no-tqdm     flag for displaying tqdm-based iterations during processing (default: True)
 ```
 
-prediction:
+Finally, we provide the interface for the `predict` mode:
 
 ``` 
 python polarity_detector.py predict -h  
@@ -269,7 +309,9 @@ options:
 
 #### Trial Generator
 
-...
+The interface to our hyperparameter search trial generator is given below. 
+Currently, it only supports performing a random search. It assures that duplicate trials are not chosen, 
+but it otherwise does not intervene on the trial generation in any way.
 
 ```
 >>> python trial_generator.py -h
@@ -312,6 +354,32 @@ options:
 
 ```
 
+For our experiments, we ran sets of 4 trials across a variety of scenarios. In particular, we ran variations on the following model components:
+- **Embeddings**: Latin BERT, LaBERTa, PhilBERTa, SPhilBERTa, mBERT, CANINE-C, CANINE-S
+- **Encoders**: Identity, BiLSTM, Transformer
+- **Loss Functions**: Cross-Entropy, Gold Distance-Weighted Cross Entropy
+- **Datasets**: Polarity Coordinate, Gaussian
+
+Note that not all combinations were used. Namely, SPhilBERTa, capturing sentence-level rather than word-level representations, 
+uses only the Identity encoder. Moreover, the same embedding was not applied with the Gaussian dataset, as it was used to train the GMM which generated that dataset. 
+Finally, the Gold Distance-Weighted Cross Entropy loss is only used with the Polarity Coordinate data, as the Gaussian data has no such measure of "distance" to use.
+
+During these trials, we varied the learning rate, the hidden size (when applicable), and number of encoder layers (when applicable). 
+Their ranges were as follows:
+- **Hidden Size**: {64, 96, 128, 192, 256, 384, 512, 768, 1024}
+- **Layers**: {1, 2, 3, 4}
+- **Learning Rate**: {1e-05, 2e-05, 3e-05, 4e-05, 5e-05, 6e-05, 7e-05, 8e-05, 9e-05, 1e-04, 2e-04, 3e-04, 4e-04, 5e-04, 6e-04, 7e-04, 8e-04, 9e-04, 1e-03, 2e-03, 3e-03, 4e-03, 5e-03, 6e-03, 7e-03, 8e-03, 9e-03, 1e-02}
+
+These ranges were selected based upon a mixture of previous experience and in consulting related work. 
+To elaborate further, the hidden size range consists of all powers of 2 from 2\*\*6 and 2\*\*10 alongside each average of each pair of successively larger powers of 2. 
+The learning rate range contains progressively longer intervals between learning rates, starting with 1e-05 to 9e-05 (in steps of 1e-05), following that with 1e-04 to 9e-04 (in steps of 1e-04), following that with 1e-03 to 9e-03 (in steps of 1e-03), and concluding with 1e-02.
+This range is an attempt to keep the number of possible learning rates low while covering a decent range and including ones found in related works.
+
+Regarding the learning rate range, there was a mild mistake in the code which caused 1e-04 and 1e-03 appeared twice. 
+This made them slightly more likely to appear than the other values.
+To allow our experiments to be reduplicated exactly, we did not correct this. 
+However, extensions of this code should be aware of it so that they may correct or incorporate it as they wish.
+
 ## Contributing
 
 This repository contains code relating to our submission to EvaLatin 2024, an evaluation campaign at the [LT4HALA](https://circse.github.io/LT4HALA/) workshop. 
@@ -343,5 +411,13 @@ To cite this repository, please use the following citation:
 
 For other works referenced above, see the following:
 ```
-...
+@misc{riemenschneiderGraeciaCaptaFerum2023,
+  title = {Graecia Capta Ferum Victorem Cepit. {{Detecting}} Latin Allusions to Ancient Greek Literature},
+  author = {Riemenschneider, Frederick and Frank, Anette},
+  year = {2023},
+  eprint = {2308.12008},
+  primaryclass = {cs.CL},
+  archiveprefix = {arxiv},
+  langid = {english}
+}
 ```
