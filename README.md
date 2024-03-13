@@ -16,8 +16,18 @@ We describe the contents of this repository in more detail below, and we highlig
 
 ## Contents
 
-Below, we present information about the repository above. 
-This mainly revolves around the CLIs present at the top level of this repository. 
+The repository contains a few main directories:
+- `data`: a collection of data related to polarity detection; 
+the data created through the study is given as a part of this repository in the subdirectories of `training/annotated`.
+- `models`: a default location for models trained by `polarity_detector.py`.
+- `predictions`: a collection of model predictions submitted to the EvaLatin 2024 shared task for polarity detection. 
+The predictions are presented in the format expected by the scoring tool given by the organizers (see each `scorer` subdirectory) subdirectories 
+as well as a format which resembles the original presentation of the data (see each `full` subdirectory).
+- `resources`: a collection of external resources (usually pretrained models) for use in various tools (i.e., `gaussian_annotator.py` and `polarity_detector.py`).
+- `results`: a default location for the results of training, validation, and testing produced by `polarity_detector.py`.
+- `utils`: a collection of code organized into a variety of subdirectories and used by the variety of CLIs presented in the top level of this repository.
+
+The repository mainly revolves around the CLIs present at its top level. 
 The CLIs themselves are presented alongside descriptions of them and notes toward reproducing our work.
 The below is further divided into two subsections regarding the initial data creation and dataset splitting (Data) 
 and the hyperparameter tuning as well as the training and evaluation of neural networks (Modeling).
@@ -78,7 +88,7 @@ Due to size of the *Odes* dataset size, trials were both trained and evaluated o
 the best GMM, having a tied covariance matrix and being initialized with the k-means algorithm, scored 0.37.
 
 For the dataset produced with this work, we applied all defaults save that we set `--embedding-filepath` to point to `resources/sphilberta`, 
-applying SPhilBERTa embeddings (Riemenschneider and Frank 2023) with polarity coordinate features attached.
+applying SPhilBERTa embeddings (Riemenschneider and Frank, 2023b) with polarity coordinate features attached.
 
 #### Polarity Coordinate Annotator
 
@@ -355,7 +365,7 @@ options:
 ```
 
 For our experiments, we ran sets of 4 trials across a variety of scenarios. In particular, we ran variations on the following model components:
-- **Embeddings**: Latin BERT, LaBERTa, PhilBERTa, SPhilBERTa, mBERT, CANINE-C, CANINE-S
+- **Embeddings**: Latin BERT (Bamman and Burns 2020), LaBERTa (Riemenschneider and Frank, 2023a), PhilBERTa (Riemenschneider and Frank, 2023a), SPhilBERTa (Riemenschneider and Frank, 2023b), mBERT (Devlin *et al.*, 2019), CANINE-C (Clark *et al.*, 2022), CANINE-S (Clark *et al.*, 2022)
 - **Encoders**: Identity, BiLSTM, Transformer
 - **Loss Functions**: Cross-Entropy, Gold Distance-Weighted Cross Entropy
 - **Datasets**: Polarity Coordinate, Gaussian
@@ -411,13 +421,67 @@ To cite this repository, please use the following citation:
 
 For other works referenced above, see the following:
 ```
+@misc{bammanLatinBERTContextual2020,
+  title = {Latin {{BERT}}: {{A}} Contextual Language Model for Classical Philology},
+  shorttitle = {Latin {{BERT}}},
+  author = {Bamman, David and Burns, Patrick J.},
+  year = {2020},
+  month = sep,
+  eprint = {2009.10053},
+  urldate = {2020-09-27},
+  abstract = {We present Latin BERT, a contextual language model for the Latin language, trained on 642.7 million words from a variety of sources spanning the Classical era to the 21st century. In a series of case studies, we illustrate the affordances of this language-specific model both for work in natural language processing for Latin and in using computational methods for traditional scholarship: we show that Latin BERT achieves a new state of the art for part-of-speech tagging on all three Universal Dependency datasets for Latin and can be used for predicting missing text (including critical emendations); we create a new dataset for assessing word sense disambiguation for Latin and demonstrate that Latin BERT outperforms static word embeddings; and we show that it can be used for semantically-informed search by querying contextual nearest neighbors. We publicly release trained models to help drive future work in this space.},
+  archiveprefix = {arxiv},
+  keywords = {Computer Science - Computation and Language},
+}
+
+@inproceedings{riemenschneiderExploringLargeLanguage2023,
+  title = {Exploring Large Language Models for Classical Philology},
+  booktitle = {Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: {{Long}} Papers)},
+  author = {Riemenschneider, Frederick and Frank, Anette},
+  editor = {Rogers, Anna and {Boyd-Graber}, Jordan and Okazaki, Naoaki},
+  year = {2023},
+  month = jul,
+  pages = {15181--15199},
+  publisher = {{Association for Computational Linguistics}},
+  address = {{Toronto, Canada}},
+  doi = {10.18653/v1/2023.acl-long.846},
+  abstract = {Recent advances in NLP have led to the creation of powerful language models for many languages including Ancient Greek and Latin. While prior work on Classical languages unanimously uses BERT, in this work we create four language models for Ancient Greek that vary along two dimensions to study their versatility for tasks of interest for Classical languages: we explore (i) encoder-only and encoder-decoder architectures using RoBERTa and T5 as strong model types, and create for each of them (ii) a monolingual Ancient Greek and a multilingual instance that includes Latin and English. We evaluate all models on morphological and syntactic tasks, including lemmatization, which demonstrates the added value of T5's decoding abilities. We further define two probing tasks to investigate the knowledge acquired by models pre-trained on Classical texts. Our experiments provide the first benchmarking analysis of existing models of Ancient Greek. Results show that our models provide significant improvements over the SoTA. The systematic analysis of model types can inform future research in designing language models for Classical languages, including the development of novel generative tasks. We make all our models available as community resources, along with a large curated pre-training corpus for Ancient Greek, to support the creation of a larger, comparable model zoo for Classical Philology.}
+}
+
 @misc{riemenschneiderGraeciaCaptaFerum2023,
-  title = {Graecia Capta Ferum Victorem Cepit. {{Detecting}} Latin Allusions to Ancient Greek Literature},
+  title = {Graecia Capta Ferum Victorem Cepit. {{Detecting}} {{Latin}} Allusions to {{Ancient Greek}} Literature},
   author = {Riemenschneider, Frederick and Frank, Anette},
   year = {2023},
   eprint = {2308.12008},
   primaryclass = {cs.CL},
   archiveprefix = {arxiv},
   langid = {english}
+}
+
+@inproceedings{devlinBERTPretrainingDeep2019,
+  title = {{{BERT}}: {{Pre-training}} of Deep Bidirectional Transformers for Language Understanding},
+  booktitle = {Proceedings of the 2019 {{Conference}} of the {{North American Chapter}} of the {{Association}} for {{Computational Linguistics}}: {{Human Language Technologies}}, {{Volume}} 1 ({{Long}} and {{Short Papers}})},
+  author = {Devlin, Jacob and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
+  year = {2019},
+  month = jun,
+  pages = {4171--4186},
+  publisher = {{Association for Computational Linguistics}},
+  address = {{Minneapolis, Minnesota}},
+  doi = {10.18653/v1/N19-1423},
+  abstract = {We introduce a new language representation model called BERT, which stands for Bidirectional Encoder Representations from Transformers. Unlike recent language representation models (Peters et al., 2018a; Radford et al., 2018), BERT is designed to pre-train deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. As a result, the pre-trained BERT model can be fine-tuned with just one additional output layer to create state-of-the-art models for a wide range of tasks, such as question answering and language inference, without substantial task-specific architecture modifications. BERT is conceptually simple and empirically powerful. It obtains new state-of-the-art results on eleven natural language processing tasks, including pushing the GLUE score to 80.5 (7.7 point absolute improvement), MultiNLI accuracy to 86.7\% (4.6\% absolute improvement), SQuAD v1.1 question answering Test F1 to 93.2 (1.5 point absolute improvement) and SQuAD v2.0 Test F1 to 83.1 (5.1 point absolute improvement).},
+}
+
+@article{clarkCaninePretrainingEfficient2022,
+  title = {Canine: {{Pre-training}} an {{Efficient Tokenization-Free Encoder}} for {{Language Representation}}},
+  author = {Clark, Jonathan H. and Garrette, Dan and Turc, Iulia and Wieting, John},
+  year = {2022},
+  month = jan,
+  journal = {Transactions of the Association for Computational Linguistics},
+  volume = {10},
+  pages = {73--91},
+  issn = {2307-387X},
+  doi = {10.1162/tacl_a_00448},
+  urldate = {2024-01-09},
+  abstract = {Pipelined NLP systems have largely been superseded by end-to-end neural modeling, yet nearly all commonly used models still require an explicit tokenization step. While recent tokenization approaches based on data-derived subword lexicons are less brittle than manually engineered tokenizers, these techniques are not equally suited to all languages, and the use of any fixed vocabulary may limit a model's ability to adapt. In this paper, we present Canine, a neural encoder that operates directly on character sequences{\textemdash}without explicit tokenization or vocabulary{\textemdash}and a pre-training strategy that operates either directly on characters or optionally uses subwords as a soft inductive bias. To use its finer-grained input effectively and efficiently, Canine combines downsampling, which reduces the input sequence length, with a deep transformer stack, which encodes context. Canine outperforms a comparable mBert model by 5.7 F1 on TyDi QA, a challenging multilingual benchmark, despite having fewer model parameters.}
 }
 ```
