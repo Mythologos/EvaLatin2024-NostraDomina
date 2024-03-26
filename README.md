@@ -14,6 +14,9 @@ It includes:
 - the process used to train and tune neural networks on this data (see `polarity_detector.py` and `trial_generator.py`)
 We describe the contents of this repository in more detail below, and we highlight our available CLIs as well as any additional information that may be helpful in reproducing our experiments.
 
+## Use
+This dataset is licensed under a Creative Commons Attribution-Sharealike 4.0 International (CC-BY-SA) license. For more information, please see https://creativecommons.org/licenses/by-sa/4.0/.
+
 ## Contents
 
 The repository contains a few main directories:
