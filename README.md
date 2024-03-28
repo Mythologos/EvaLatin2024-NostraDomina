@@ -14,6 +14,23 @@ It includes:
 - the process used to train and tune neural networks on this data (see `polarity_detector.py` and `trial_generator.py`)
 We describe the contents of this repository in more detail below, and we highlight our available CLIs as well as any additional information that may be helpful in reproducing our experiments.
 
+## Use
+
+The treebank-derived data points of the automatically-annotated datasets are licensed based on their datasets of origin.
+Our datasets tag each point with their datasets of origin so that proper licensing can be taken into account.
+
+We license the data points from each dataset as follows:
+- [Perseus \[UD\]](https://github.com/UniversalDependencies/UD_Latin-Perseus) (Bamman and Crane, 2011): CC BY-NC-SA 4.0 International (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+- [PROIEL \[UD\]](https://github.com/UniversalDependencies/UD_Latin-PROIEL) (Haug *et al.*, 2009): CC BY-NC-SA 4.0 International (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+- [ITTB \[UD\]](https://github.com/UniversalDependencies/UD_Latin-ITTB) (Passarotti, 2019): CC BY-NC-SA 4.0 International (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+- [LLCT \[UD\]](https://github.com/UniversalDependencies/UD_Latin-LLCT) (Cecchini, Korkiakangas, and Passarotti, 2020a): CC BY-SA 4.0 International (https://creativecommons.org/licenses/by-sa/4.0/)
+- [UDante \[UD\]](https://github.com/UniversalDependencies/UD_Latin-UDante) (Cecchini *et al.*, 2020b): CC BY-SA 4.0 International (https://creativecommons.org/licenses/by-sa/4.0/)
+- [EvaLatin 2022](https://github.com/CIRCSE/LT4HALA/tree/master/2022) (Sprugnoli *et al.*, 2022): CC BY-NC-SA 4.0 International (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+- [Archimedes Latinus](https://github.com/mfantoli/ArchimedesLatinus) (Fantoli and de Lhoneux, 2022): CC BY-NC-SA 4.0 International (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Please take caution when using our data that you adhere to the licensing applied by each set of data points, 
+as we have not divided them into separate files based on licensing. 
+
 ## Contents
 
 The repository contains a few main directories:
@@ -404,7 +421,7 @@ and we are happy to provide clarifications or assistance in reproducing our resu
 
 To cite this repository, please use the following citation:
 
-```
+```bibtex
 @inproceedings{bothwellImprovingLatinPolarity2024,
   title = {Improving {{Latin}} Polarity Detection through Semi-Supervised Data Augmentation},
   booktitle = {Proceedings of the Third Workshop on Language Technologies for Historical and Ancient Languages},
@@ -419,8 +436,113 @@ To cite this repository, please use the following citation:
 }
 ```
 
-For other works referenced above, see the following:
+For the datasets annotated automatically, refer to the following works:
+
+```bibtex
+@incollection{bammanAncientGreekLatin2011,
+  title = {The {{Ancient Greek}} and {{Latin}} Dependency Treebanks},
+  booktitle = {Language {{Technology}} for {{Cultural Heritage}}},
+  author = {Bamman, David and Crane, Gregory},
+  year = {2011},
+  series = {Theory and {{Applications}} of {{Natural Language Processing}}},
+  pages = {79--98},
+  publisher = {{Springer Berlin Heidelberg}},
+  address = {{Berlin, Heidelberg}},
+  abstract = {This paper describes the development, composition, and several uses of the Ancient Greek and Latin Dependency Treebanks, large collections of Classical texts in which the syntactic, morphological and lexical information for each word is made explicit. To date, over 200 individuals from around the world have collaborated to annotate over 350,000 words, including the entirety of Homer's Iliad and Odyssey, Sophocles' Ajax, all of the extant works of Hesiod and Aeschylus, and selections from Caesar, Cicero, Jerome, Ovid, Petronius, Propertius, Sallust and Vergil. While perhaps the most straightforward value of such an annotated corpus for Classical philology is the morphosyntactic searching it makes possible, it also enables a large number of downstream tasks as well, such as inducing the syntactic behavior of lexemes and automatically identifying similar passages between texts.},
+  copyright = {Springer-Verlag Berlin Heidelberg 2011},
+  isbn = {3-642-20226-8},
+  langid = {english},
+  keywords = {Ancient Greek,dependency grammar,digital libraries,Latin,treebanks},
+  url = {https://rdcu.be/dAKo0}
+}
+
+@inproceedings{haugComputationalLinguisticIssues2009,
+  title = {Computational and Linguistic Issues in Designing a Syntactically Annotated Parallel Corpus of {{Indo-European}} Languages},
+  booktitle = {Traitement Automatique Des Langues, Volume 50, Num{\'e}ro 2 : {{Langues}} Anciennes [{{Ancient}} Languages]},
+  author = {Haug, Dag T. and J{\o}hndal, Marius L. and Eckhoff, Hanne M. and Welo, Eirik and Hertzenberg, Mari J. B. and M{\"u}th, Angelika},
+  editor = {Denooz, Joseph and Rosmorduc, Serge},
+  year = {2009},
+  pages = {17--45},
+  publisher = {{ATALA (Association pour le Traitement Automatique des Langues)}},
+  address = {{France}},
+  url = {https://aclanthology.org/2009.tal-2.2}
+}
+
+@incollection{passarottiProjectIndexThomisticus2019,
+  title = {The {{Project}} of the {{Index Thomisticus Treebank}}},
+  booktitle = {Digital {{Classical Philology}}},
+  author = {Passarotti, Marco},
+  year = {2019},
+  volume = {10},
+  pages = {299--320},
+  publisher = {{De Gruyter}},
+  address = {{Berlin, Boston}},
+  copyright = {2019 Walter de Gruyter GmbH, Berlin/Munich/Boston},
+  isbn = {3-11-059957-0},
+  langid = {english},
+  doi = {http://dx.doi.org/10.1515/9783110599572-017}
+}
+
+@inproceedings{cecchiniNewLatinTreebank2020a,
+  title = {A New {{Latin}} Treebank for {{Universal Dependencies}}: {{Charters}} between {{Ancient Latin}} and {{Romance}} Languages},
+  booktitle = {Proceedings of the 12th {{Language Resources}} and {{Evaluation Conference}}},
+  author = {Cecchini, Flavio Massimiliano and Korkiakangas, Timo and Passarotti, Marco},
+  year = {2020},
+  month = may,
+  pages = {933--942},
+  publisher = {{European Language Resources Association}},
+  address = {{Marseille, France}},
+  abstract = {The present work introduces a new Latin treebank that follows the Universal Dependencies (UD) annotation standard. The treebank is obtained from the automated conversion of the Late Latin Charter Treebank 2 (LLCT2), originally in the Prague Dependency Treebank (PDT) style. As this treebank consists of Early Medieval legal documents, its language variety differs considerably from both the Classical and Medieval learned varieties prevalent in the other currently available UD Latin treebanks. Consequently, besides significant phenomena from the perspective of diachronic linguistics, this treebank also poses several challenging technical issues for the current and future syntactic annotation of Latin in the UD framework. Some of the most relevant cases are discussed in depth, with comparisons between the original PDT and the resulting UD annotations. Additionally, an overview of the UD-style structure of the treebank is given, and some diachronic aspects of the transition from Latin to Romance languages are highlighted.},
+  isbn = {979-10-95546-34-4},
+  langid = {english},
+  url = {https://aclanthology.org/2020.lrec-1.117}
+}
+
+@inproceedings{cecchiniUDanteFirstSteps2020b,
+  title = {{{UDante}}: {{First}} Steps towards the Universal Dependencies Treebank of {{Dante's}} {{Latin}} Works},
+  booktitle = {Proceedings of the Seventh Italian Conference on Computational Linguistics, {{CLiC-it}} 2020, Bologna, Italy, March 1-3, 2021},
+  author = {Cecchini, Flavio Massimiliano and Sprugnoli, Rachele and Moretti, Giovanni and Passarotti, Marco},
+  editor = {Monti, Johanna and Dell'Orletta, Felice and Tamburini, Fabio},
+  year = {2020},
+  series = {{{CEUR}} Workshop Proceedings},
+  volume = {2769},
+  publisher = {{CEUR-WS.org}},
+  bibsource = {dblp computer science bibliography, https://dblp.org},
+  timestamp = {Fri, 10 Mar 2023 16:22:17 +0100},
+  url = {https://hdl.handle.net/11381/2913208}
+}
+
+@inproceedings{fantoliLinguisticAnnotationNeoLatin2022,
+  title = {Linguistic Annotation of Neo-{{Latin}} Mathematical Texts: {{A}} Pilot-Study to Improve the Automatic Parsing of the {{Archimedes Latinus}}},
+  booktitle = {Proceedings of the Second Workshop on Language Technologies for Historical and Ancient Languages},
+  author = {Fantoli, Margherita and {de Lhoneux}, Miryam},
+  editor = {Sprugnoli, Rachele and Passarotti, Marco},
+  year = {2022},
+  month = jun,
+  pages = {129--134},
+  publisher = {{European Language Resources Association}},
+  address = {{Marseille, France}},
+  abstract = {This paper describes the process of syntactically parsing the Latin translation by Jacopo da San Cassiano of the Greek mathematical work The Spirals of Archimedes. The Universal Dependencies formalism is adopted. First, we introduce the historical and linguistic importance of Jacopo da San Cassiano's translation. Subsequently, we describe the deep Biaffine parser used for this pilot study. In particular, we motivate the choice of using the technique of treebank embeddings in light of the characteristics of mathematical texts. The paper then details the process of creation of training and test data, by highlighting the most compelling linguistic features of the text and the choices implemented in the current version of the treebank. Finally, the results of the parsing are discussed in comparison to a baseline and the most prominent errors are discussed. Overall, the paper shows the added value of creating specific training data, and of using targeted strategies (as treebank embeddings) to exploit existing annotated corpora while preserving the features of one specific text when performing syntactic parsing.},
+  url = {https://aclanthology.org/2022.lt4hala-1.18}
+}
+
+@inproceedings{sprugnoliOverviewEvaLatin2022,
+  title = {Overview of the {{EvaLatin}} 2022 Evaluation Campaign},
+  booktitle = {Proceedings of the Second Workshop on Language Technologies for Historical and Ancient Languages},
+  author = {Sprugnoli, Rachele and Passarotti, Marco and Cecchini, Flavio Massimiliano and Fantoli, Margherita and Moretti, Giovanni},
+  year = {2022},
+  month = jun,
+  pages = {183--188},
+  publisher = {European Language Resources Association},
+  address = {Marseille, France},
+  abstract = {This paper describes the organization and the results of the second edition of EvaLatin, the campaign for the evaluation of Natural Language Processing tools for Latin. The three shared tasks proposed in EvaLatin 2022, i.,e.,Lemmatization, Part-of-Speech Tagging and Features Identification, are aimed to foster research in the field of language technologies for Classical languages. The shared dataset consists of texts mainly taken from the LASLA corpus. More specifically, the training set includes only prose texts of the Classical period, whereas the test set is organized in three sub-tasks: a Classical sub-task on a prose text of an author not included in the training data, a Cross-genre sub-task on poetic and scientific texts, and a Cross-time sub-task on a text of the 15th century. The results obtained by the participants for each task and sub-task are presented and discussed.},
+  url = {https://aclanthology.org/2022.lt4hala-1.29}
+}
 ```
+
+For other works referenced above, see the following:
+
+```bibtex
 @misc{bammanLatinBERTContextual2020,
   title = {Latin {{BERT}}: {{A}} Contextual Language Model for Classical Philology},
   shorttitle = {Latin {{BERT}}},
