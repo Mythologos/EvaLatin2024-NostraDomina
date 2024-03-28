@@ -12,6 +12,7 @@ It includes:
 - the automatically-annotated data generated as a part of the paper (see `data/polarity/training`) 
 - the tools applied to generate and process that data, including the novel polarity coordinate clustering method (see `gaussian_annotator.py`, `polarity_annotator.py`, and `polarity_splitter.py`)
 - the process used to train and tune neural networks on this data (see `polarity_detector.py` and `trial_generator.py`)
+- the tools employed to analyze and visualize the results of our methods on EvaLatin 2024's test data (see `polarity_scorer.py` and `results_visualizer.py`).
 We describe the contents of this repository in more detail below, and we highlight our available CLIs as well as any additional information that may be helpful in reproducing our experiments.
 
 ## Use
@@ -46,8 +47,10 @@ as well as a format which resembles the original presentation of the data (see e
 
 The repository mainly revolves around the CLIs present at its top level. 
 The CLIs themselves are presented alongside descriptions of them and notes toward reproducing our work.
-The below is further divided into two subsections regarding the initial data creation and dataset splitting (Data) 
-and the hyperparameter tuning as well as the training and evaluation of neural networks (Modeling).
+The below is further divided into three subsections regarding the initial data creation and dataset splitting (Data) 
+and the hyperparameter tuning, 
+the training and evaluation of neural networks (Modeling),
+and the examination and visualization of model predictions (Results).
 
 To reproduce our work, some data not innately included in our repository needs to be gathered. 
 Links and references to all this data are present in `.gitkeep` files spread throughout the `data` and `resources` directories. 
@@ -406,6 +409,51 @@ Regarding the learning rate range, there was a mild mistake in the code which ca
 This made them slightly more likely to appear than the other values.
 To allow our experiments to be reduplicated exactly, we did not correct this. 
 However, extensions of this code should be aware of it so that they may correct or incorporate it as they wish.
+
+### Results
+
+In this section, we present our scorer for the results of the emotion polarity detection task (`polarity_scorer.py`) and our visualizer for the very same classification results (`results_visualizer.py`). 
+Although the organizers provided a scorer for results, we created an additional one so that we could compute the macro-averages that they did alongside additional statistics.
+
+#### Polarity Scorer
+
+This interface to our polarity scorer is given below. Note that this interface is largely tailored to the scoring format given by the EvaLatin 2024 shared task organizers. 
+Moreover, its subsets are restricted to those given in the test set of the shared task.
+However, it can be used on other directories or files of TSV data in the same format.
+It computes and displays Macro-F1 and Micro-F1 scores across the selected and filtered files.
+
+```
+>>> python polarity_scorer.py -h
+usage: polarity_scorer.py [-h] --input-filepath INPUT_FILEPATH [--subsets [{Orazio,Pontano,Seneca} ...]]
+
+options:
+  -h, --help            show this help message and exit
+  --input-filepath INPUT_FILEPATH
+                        path to file or directory containing .tsv files as designated by EvaLatin 2024's emotion polarity detection task
+  --subsets [{Orazio,Pontano,Seneca} ...]
+                        subsets of the EvaLatin 2024 emotion polarity detection test set to exclusively evaluate on; all available documents are used if no subsets are given
+```
+
+#### Results Visualizer
+
+This interface outputs or displays a confusion matrix for a set of one or more files in the scoring format given by the EvaLatin 2024 shared task organizers.
+Currently, most of the stylistic attributes of the confusion matrix heatmap are predefined and not able to be altered in the interface.
+
+```
+>>> python results_visualizer.py -h
+usage: results_visualizer.py [-h] [--label-order [LABEL_ORDER ...]] --input-filepath INPUT_FILEPATH [--output-filepath OUTPUT_FILEPATH] [--subsets [{Orazio,Pontano,Seneca} ...]]
+                                                                                                                                                                                 
+options:                                                                                                                                                                         
+  -h, --help            show this help message and exit                                                                                                                          
+  --label-order [LABEL_ORDER ...]                                                                                                                                                
+                        order of labels for the rows and columns of the confusion matrix                                                                                         
+  --input-filepath INPUT_FILEPATH                                                                                                                                                
+                        path to file or directory containing .tsv files as designated by EvaLatin 2024's emotion polarity detection task                                         
+  --output-filepath OUTPUT_FILEPATH
+                        output location (sans extension) for outputted confusion matrix visualization
+  --subsets [{Orazio,Pontano,Seneca} ...]
+                        subsets of the EvaLatin 2024 emotion polarity detection test set to exclusively evaluate on; all available documents are used if no subsets are given 
+```
 
 ## Contributing
 

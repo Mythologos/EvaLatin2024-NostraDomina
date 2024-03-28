@@ -12,6 +12,7 @@ dependencies:
   - chardet
   - networkx
   - natsort
+  - matplotlib
   - pip:
     - cltk
     - tensor2tensor

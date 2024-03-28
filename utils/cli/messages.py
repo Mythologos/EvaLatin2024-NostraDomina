@@ -74,6 +74,13 @@ class PCMessage(NamedEnum):
                              "are taken into account for computing polarity coordinates"
 
 
+class ResultsMessage(NamedEnum):
+    INPUT_FILEPATH: str = "path to file or directory containing .tsv files as designated by EvaLatin 2024's " \
+                          "emotion polarity detection task"
+    SUBSETS: str = "subsets of the EvaLatin 2024 emotion polarity detection test set to exclusively evaluate on; " \
+                   "all available documents are used if no subsets are given"
+
+
 class SplitterMessage(NamedEnum):
     INPUT_FILE: str = "filepath of the file to be partitioned into designated data splits"
     NAMES: str = "names of the data splits to be created; these must match the number of ratios given"
@@ -81,3 +88,8 @@ class SplitterMessage(NamedEnum):
     RATIOS: str = "decimals representing the percentages of data composing each split; these must sum to 1, " \
                   "and the number of splits must match the number of names"
     STRATEGY: str = "the algorithm used to create the data splits"
+
+
+class VisualizerMessage(NamedEnum):
+    LABEL_ORDER: str = "order of labels for the rows and columns of the confusion matrix"
+    OUTPUT_FILEPATH: str = "output location (sans extension) for outputted confusion matrix visualization"
