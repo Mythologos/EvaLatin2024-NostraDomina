@@ -7,7 +7,7 @@
 
 ## Summary
 
-This is a repository for the LT4HALA 2024 workshop paper, **"Improving Latin Polarity Detection through Semi-Supervised Data Augmentation."**
+This is a repository for the LT4HALA 2024 workshop paper, **"Nostra Domina at EvaLatin 2024: Improving Latin Polarity Detection through Semi-Supervised Data Augmentation."**
 It includes:
 - the automatically-annotated data generated as a part of the paper (see `data/polarity/training`) 
 - the tools applied to generate and process that data, including the novel polarity coordinate clustering method (see `gaussian_annotator.py`, `polarity_annotator.py`, and `polarity_splitter.py`)
@@ -423,7 +423,7 @@ To cite this repository, please use the following citation:
 
 ```bibtex
 @inproceedings{bothwellImprovingLatinPolarity2024,
-  title = {Improving {{Latin}} Polarity Detection through Semi-Supervised Data Augmentation},
+  title = {Nostra Domina at EvaLatin 2024: Improving {{Latin}} Polarity Detection through Semi-Supervised Data Augmentation},
   booktitle = {Proceedings of the Third Workshop on Language Technologies for Historical and Ancient Languages},
   author = {Bothwell, Stephen and Swenor, Abigail and Chiang, David},
   year = {2024},
