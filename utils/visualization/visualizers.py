@@ -19,7 +19,7 @@ def visualize_confusion_matrix(predictions: list[list[str]], ground_truths: list
             confusion_matrix[prediction_class_index, ground_truth_class_index] += 1
 
     label_range: range = range(0, len(labels))
-    mean_value: float = confusion_matrix.mean().item()
+    half_max_value: float = confusion_matrix.max().item() // 2
 
     pyplot.rcParams["font.sans-serif"] = ["TeX Gyre Heros"]
     figure, axis = pyplot.subplots()
@@ -29,7 +29,7 @@ def visualize_confusion_matrix(predictions: list[list[str]], ground_truths: list
     axis.set_yticks(label_range, labels=labels, fontsize=16)
     for source_index in label_range:
         for destination_index in label_range:
-            if confusion_matrix[destination_index, source_index] < mean_value:
+            if confusion_matrix[destination_index, source_index] < half_max_value:
                 color: str = "k"
             else:
                 color = "w"
