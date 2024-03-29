@@ -440,19 +440,21 @@ This interface outputs or displays a confusion matrix for a set of one or more f
 Currently, most of the stylistic attributes of the confusion matrix heatmap are predefined and not able to be altered in the interface.
 
 ```
->>> python results_visualizer.py -h
+>>> python results_visualizer.py -h               
 usage: results_visualizer.py [-h] [--label-order [LABEL_ORDER ...]] --input-filepath INPUT_FILEPATH [--output-filepath OUTPUT_FILEPATH] [--subsets [{Orazio,Pontano,Seneca} ...]]
+                             [--subtitle SUBTITLE]                                                                                                                               
                                                                                                                                                                                  
 options:                                                                                                                                                                         
   -h, --help            show this help message and exit                                                                                                                          
   --label-order [LABEL_ORDER ...]                                                                                                                                                
-                        order of labels for the rows and columns of the confusion matrix                                                                                         
-  --input-filepath INPUT_FILEPATH                                                                                                                                                
-                        path to file or directory containing .tsv files as designated by EvaLatin 2024's emotion polarity detection task                                         
+                        order of labels for the rows and columns of the confusion matrix
+  --input-filepath INPUT_FILEPATH
+                        path to file or directory containing .tsv files as designated by EvaLatin 2024's emotion polarity detection task
   --output-filepath OUTPUT_FILEPATH
                         output location (sans extension) for outputted confusion matrix visualization
   --subsets [{Orazio,Pontano,Seneca} ...]
-                        subsets of the EvaLatin 2024 emotion polarity detection test set to exclusively evaluate on; all available documents are used if no subsets are given 
+                        subsets of the EvaLatin 2024 emotion polarity detection test set to exclusively evaluate on; all available documents are used if no subsets are given       
+  --subtitle SUBTITLE   subtitle of the confusion matrix; defaults to concatenation of subsets if not given, and to 'All' if no subsets are given.
 ```
 
 ## Contributing

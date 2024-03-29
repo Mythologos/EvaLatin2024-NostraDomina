@@ -19,6 +19,7 @@ if __name__ == "__main__":
         "--subsets", type=str, nargs="*", choices=["Orazio", "Pontano", "Seneca"], default=[],
         help=ResultsMessage.SUBSETS
     )
+    parser.add_argument("--subtitle", type=str, default=None, help=VisualizerMessage.SUBTITLE)
     args: Namespace = parser.parse_args()
 
     all_filepaths: list[str] = gather_scorer_filepaths(args.input_filepath, args.subsets)
@@ -29,8 +30,15 @@ if __name__ == "__main__":
         all_labels: Sequence[str] = gather_labels(all_predictions, all_ground_truths)
         all_labels = natsorted(all_labels)
 
+    if args.subtitle is not None:
+        subtitle: str = args.subtitle
+    elif len(args.subsets) != 0:
+        subtitle = "; ".join(args.subsets)
+    else:
+        subtitle = "All"
+
     confusion_matrix_kwargs: dict[str, Any] = {
         "output_filepath": args.output_filepath,
-        "subtitle": "All" if len(args.subsets) == 0 else "; ".join(args.subsets)
+        "subtitle": subtitle
     }
     visualize_confusion_matrix(all_predictions, all_ground_truths, all_labels, **confusion_matrix_kwargs)

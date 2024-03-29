@@ -93,3 +93,5 @@ class SplitterMessage(NamedEnum):
 class VisualizerMessage(NamedEnum):
     LABEL_ORDER: str = "order of labels for the rows and columns of the confusion matrix"
     OUTPUT_FILEPATH: str = "output location (sans extension) for outputted confusion matrix visualization"
+    SUBTITLE: str = "subtitle of the confusion matrix; defaults to concatenation of subsets if not given, " \
+                    "and to 'All' if no subsets are given."
