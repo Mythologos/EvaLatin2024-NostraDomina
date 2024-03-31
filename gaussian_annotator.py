@@ -29,7 +29,8 @@ from utils.data.loaders.polarity import PolarityLexicon, PolarityDataset, Polari
 from utils.data.tokenizers.tokens import WORD2VEC_UNK_TOKEN
 
 # We conditionally set an environment variable.
-environ["OMP_NUM_THREADS"] = "1" if system() == "Windows" else environ["OMP_NUM_THREADS"]
+if system() == "Windows":
+    environ["OMP_NUM_THREADS"] = "1"
 
 EmbeddingTable: Type = dict[str, NDArray]
 EmbeddingType: Type = Union[EmbeddingTable, SentenceTransformer]
