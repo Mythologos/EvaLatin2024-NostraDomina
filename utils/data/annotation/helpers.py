@@ -3,11 +3,19 @@ from os.path import isdir, isfile
 from statistics import mean, stdev
 from typing import Optional
 
-from utils.data.annotation import PolarityCoordinate, POINTS, PolarityClass
-from utils.data.loaders.general.conll_loader import ConllSentence, ConllDataset, MULTIWORD_ID_MARKER
-from utils.data.loaders.polarity import LexiconEntry, PolarityLexicon, construct_lexicon_mapping, load_lexicon_file
+from cltk.lemmatize import LatinBackoffLemmatizer
+from numpy import array, concatenate, int16, mean, stack, zeros
+from numpy.typing import NDArray
+from sentence_transformers import SentenceTransformer
+from torch import inference_mode
 
-DEFAULT_TREEBANK_NAME: str = "AutoSentimentTreebankv1"
+from utils.data.annotation import CLASSES, PolarityCoordinate, POINTS, PolarityClass
+from utils.data.annotation.constants import DEFAULT_TREEBANK_NAME, EmbeddingTable, EmbeddingType
+from utils.data.loaders.general.conll_loader import ConllSentence, ConllDataset, MULTIWORD_ID_MARKER
+from utils.data.loaders.general.embedding_loader import load_embeddings
+from utils.data.loaders.polarity import LexiconEntry, PolarityLexicon, construct_lexicon_mapping, load_lexicon_file, \
+    PolarityDataset, PolaritySentence
+from utils.data.tokenizers.tokens import WORD2VEC_UNK_TOKEN
 
 
 def collect_input_filepaths(input_filepath: str) -> list[tuple[str, str]]:
@@ -156,3 +164,94 @@ def compute_polarity_coordinate(lemmata: list[str], lexicon: PolarityLexicon,
         polarity_coordinate: PolarityCoordinate = POINTS[PolarityClass.NEUTRAL]
 
     return polarity_coordinate
+
+
+def create_lexical_word_embedding(lemma: str, embeddings: EmbeddingTable, lexicon: PolarityLexicon) -> NDArray:
+    # We get the relevant word embedding...
+    word_embedding: NDArray = embeddings[lemma] if lemma in embeddings else embeddings[WORD2VEC_UNK_TOKEN]
+
+    # We gather polarity coordinate information for the given word ...
+    lexicon_score: float = lexicon[lemma]["score"] if lemma in lexicon else 0.0
+    polarity: float = (lexicon_score // 2) + .5
+    intensity: float = (abs(lexicon_score) // 2) + .5
+    sentiment_array: NDArray = array([polarity, intensity])
+
+    # We combine the word embedding and sentiment information.
+    lexical_word_embedding: NDArray = concatenate((word_embedding, sentiment_array), axis=0)
+    return lexical_word_embedding
+
+
+@inference_mode()
+def create_sentence_embedding(sentence: str, embeddings: SentenceTransformer, lemmata: list[str],
+                              lexicon: PolarityLexicon) -> NDArray:
+    # We get the relevant word embedding...
+    embeddings.eval()
+    sentence_embedding: NDArray = embeddings.encode([sentence]).squeeze(0)
+
+    # We gather polarity coordinate information for the given sentence ...
+    filtered_lemmata: list[Optional[str]] = []
+    for lemma in lemmata:
+        lexical_lemma: Optional[str] = None
+        if lemma in lexicon:
+            lexical_lemma = lemma
+        filtered_lemmata.append(lexical_lemma)
+
+    polarity_coordinate: PolarityCoordinate = \
+        compute_polarity_coordinate(filtered_lemmata, lexicon, is_lexicon_sensitive=True)
+    sentiment_array: NDArray = \
+        array([polarity_coordinate.polarity, polarity_coordinate.intensity], dtype=sentence_embedding.dtype)
+
+    # We combine the sentence embedding and sentiment information.
+    lexicalized_embedding: NDArray = concatenate((sentence_embedding, sentiment_array), axis=0)
+    return lexicalized_embedding
+
+
+def gather_aggregated_sentence_embedding(lemmata: list[str], embeddings: EmbeddingTable,
+                                         lexicon: PolarityLexicon) -> NDArray:
+    word_embeddings: list[NDArray] = []
+    for lemma in lemmata:
+        word_embedding: NDArray = create_lexical_word_embedding(lemma, embeddings, lexicon)
+        word_embeddings.append(word_embedding)
+    else:
+        stacked_word_embeddings: NDArray = stack(word_embeddings)
+        mean_embedding: NDArray = mean(stacked_word_embeddings, axis=0)
+
+    return mean_embedding
+
+
+def load_labeled_embeddings(polarity_dataset: PolarityDataset, embeddings: EmbeddingType,
+                            lexicon: PolarityLexicon, lemmatizer: LatinBackoffLemmatizer) -> tuple[NDArray, NDArray]:
+    separated_sentence_embeddings: list[NDArray] = []
+    labels: NDArray = zeros((len(polarity_dataset)), dtype=int16)
+    for i in range(0, len(polarity_dataset)):
+        sentence: PolaritySentence = polarity_dataset[i]
+        words: list[str] = sentence.sentence_text.split()
+        lemmata: list[Optional[str]] = [lemma for (word, lemma) in lemmatizer.lemmatize(words)]
+        if isinstance(embeddings, dict) is True:
+            separated_sentence_embedding: NDArray = \
+                gather_aggregated_sentence_embedding(lemmata, embeddings, lexicon)
+        elif isinstance(embeddings, SentenceTransformer) is True:
+            separated_sentence_embedding: NDArray = \
+                create_sentence_embedding(sentence.sentence_text, embeddings, lemmata, lexicon)
+        else:
+            raise ValueError(f"The embedding of type <{type(embeddings)}> is not currently handled.")
+
+        separated_sentence_embeddings.append(separated_sentence_embedding)
+        labels[i] = CLASSES[sentence.attributes["polarity"]]
+
+    sentence_embeddings: NDArray = stack(separated_sentence_embeddings)
+    return sentence_embeddings, labels
+
+
+def gather_embeddings(embedding_filepath: str) -> EmbeddingType:
+    # First, we determine the best Gaussian model for clustering our data.
+    if isdir(embedding_filepath) is True:
+        print("Attempting to use SPhilBERTa embeddings...", flush=True)
+        selected_embeddings: EmbeddingType = SentenceTransformer(embedding_filepath)
+    elif isfile(embedding_filepath) is True:
+        print("Attempting to use averaged word embeddings (from Burns *et al.* 2021)...", flush=True)
+        selected_embeddings: EmbeddingType = load_embeddings(embedding_filepath)
+    else:
+        raise ValueError(f"The path <{embedding_filepath}> is not a valid file or directory.")
+
+    return selected_embeddings

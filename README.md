@@ -12,7 +12,7 @@ It includes:
 - the automatically-annotated data generated as a part of the paper (see `data/polarity/training`) 
 - the tools applied to generate and process that data, including the novel polarity coordinate clustering method (see `gaussian_annotator.py`, `polarity_annotator.py`, and `polarity_splitter.py`)
 - the process used to train and tune neural networks on this data (see `polarity_detector.py` and `trial_generator.py`)
-- the tools employed to analyze and visualize the results of our methods on EvaLatin 2024's test data (see `polarity_scorer.py` and `results_visualizer.py`).
+- the tools employed to analyze and visualize the results of our methods on EvaLatin 2024's test data (see `polarity_scorer.py`, `results_comparer.py`, and `results_visualizer.py`).
 We describe the contents of this repository in more detail below, and we highlight our available CLIs as well as any additional information that may be helpful in reproducing our experiments.
 
 ## Use
@@ -67,9 +67,9 @@ For our Gaussian annotator, we provide the CLI below:
 
 ```
 >>> python gaussian_annotator.py -h
-usage: gaussian_annotator.py [-h] [--components COMPONENTS] [--embedding-filepath EMBEDDING_FILEPATH] [--input-filepath INPUT_FILEPATH] [--lexicon-filepath LEXICON_FILEPATH]
-                             [--output-filename OUTPUT_FILENAME] [--output-filepath OUTPUT_FILEPATH] [--report | --no-report] [--random-seed RANDOM_SEED]
-                             [--random-seeds RANDOM_SEEDS] [--seed-filepath SEED_FILEPATH]
+usage: gaussian_annotator.py [-h] [--components COMPONENTS] [--embedding-filepath EMBEDDING_FILEPATH] [--input-filepath [INPUT_FILEPATH]] [--lexicon-filepath LEXICON_FILEPATH]
+                             [--output-filename OUTPUT_FILENAME] [--output-filepath [OUTPUT_FILEPATH]] [--report | --no-report] [--random-seed RANDOM_SEED]
+                             [--random-seeds RANDOM_SEEDS] [--save-filepath SAVE_FILEPATH] [--seed-filepath SEED_FILEPATH]
 
 options:
   -h, --help            show this help message and exit
@@ -77,13 +77,13 @@ options:
                         number of distributions (i.e., classes) the Gaussian Mixture Model will incorporate
   --embedding-filepath EMBEDDING_FILEPATH
                         filepath to file or directory containing embedding data; currently only supports word2vec or SPhilBERTa
-  --input-filepath INPUT_FILEPATH
+  --input-filepath [INPUT_FILEPATH]
                         filepath to directory containing data to annotate
   --lexicon-filepath LEXICON_FILEPATH
                         filepath to sentiment lexicon
   --output-filename OUTPUT_FILENAME
                         name of file where newly-annotated data will be stored; does not require file extension
-  --output-filepath OUTPUT_FILEPATH
+  --output-filepath [OUTPUT_FILEPATH]
                         filepath to a directory where newly-annotated data will be stored
   --report, --no-report
                         a flag indicating whether the annotator should report numerical results regarding the data or not (default: False)
@@ -91,6 +91,8 @@ options:
                         a flag indicating the random seed which controls the general procedure
   --random-seeds RANDOM_SEEDS
                         the number of random seeds used to generate initial random states for the Gaussian mixture Model
+  --save-filepath SAVE_FILEPATH
+                        filepath to location where Gaussian Mixture Model will be saved
   --seed-filepath SEED_FILEPATH
                         filepath to labeled data used for training the Gaussian Mixture Model
 ```
@@ -412,7 +414,8 @@ However, extensions of this code should be aware of it so that they may correct 
 
 ### Results
 
-In this section, we present our scorer for the results of the emotion polarity detection task (`polarity_scorer.py`) and our visualizer for the very same classification results (`results_visualizer.py`). 
+In this section, we present our scorer for the results of the emotion polarity detection task (`polarity_scorer.py`), 
+our comparer for our Gaussian clustering model and our neural models, and our visualizer for our classification task results (`results_visualizer.py`). 
 Although the organizers provided a scorer for results, we created an additional one so that we could compute the macro-averages that they did alongside additional statistics.
 
 #### Polarity Scorer
@@ -432,6 +435,33 @@ options:
                         path to file or directory containing .tsv files as designated by EvaLatin 2024's emotion polarity detection task
   --subsets [{Orazio,Pontano,Seneca} ...]
                         subsets of the EvaLatin 2024 emotion polarity detection test set to exclusively evaluate on; all available documents are used if no subsets are given
+```
+
+#### Results Comparer
+
+The interface for our results comparer is given below. Currently, it is only meant to function with a Gaussian model, whose classifications are derived on-the-fly, 
+and some other model whose predictions have been outputted to EvaLatin's standardized TSV format.
+This interface displays both the Macro F1 score for the Gaussian model and Cohen's kappa (Cohen, 1960) for the pair of models, accounting for chance agreement.
+
+```
+>>> python results_comparer.py -h  
+usage: results_comparer.py [-h] [--embedding-filepath EMBEDDING_FILEPATH] [--lexicon-filepath LEXICON_FILEPATH] [--model-filepath MODEL_FILEPATH]
+                           [--predictions-directory PREDICTIONS_DIRECTORY] [--random-seed RANDOM_SEED] [--test-directory TEST_DIRECTORY]
+
+options:
+  -h, --help            show this help message and exit
+  --embedding-filepath EMBEDDING_FILEPATH
+                        filepath to file or directory containing embedding data; currently only supports word2vec or SPhilBERTa
+  --lexicon-filepath LEXICON_FILEPATH
+                        filepath to sentiment lexicon
+  --model-filepath MODEL_FILEPATH
+                        filepath to a trained Gaussian Mixture Model from scikit-learn for the emotion polarity detection task
+  --predictions-directory PREDICTIONS_DIRECTORY
+                        path to directory where EvaLatin-style TSV prediction data is contained
+  --random-seed RANDOM_SEED
+                        a flag indicating the random seed which controls the general procedure
+  --test-directory TEST_DIRECTORY
+                        path to directory where EvaLatin-style TSV data is contained
 ```
 
 #### Results Visualizer
@@ -606,28 +636,30 @@ For other works referenced above, see the following:
   keywords = {Computer Science - Computation and Language},
 }
 
-@inproceedings{riemenschneiderExploringLargeLanguage2023,
-  title = {Exploring Large Language Models for Classical Philology},
-  booktitle = {Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: {{Long}} Papers)},
-  author = {Riemenschneider, Frederick and Frank, Anette},
-  editor = {Rogers, Anna and {Boyd-Graber}, Jordan and Okazaki, Naoaki},
-  year = {2023},
-  month = jul,
-  pages = {15181--15199},
-  publisher = {{Association for Computational Linguistics}},
-  address = {{Toronto, Canada}},
-  doi = {10.18653/v1/2023.acl-long.846},
-  abstract = {Recent advances in NLP have led to the creation of powerful language models for many languages including Ancient Greek and Latin. While prior work on Classical languages unanimously uses BERT, in this work we create four language models for Ancient Greek that vary along two dimensions to study their versatility for tasks of interest for Classical languages: we explore (i) encoder-only and encoder-decoder architectures using RoBERTa and T5 as strong model types, and create for each of them (ii) a monolingual Ancient Greek and a multilingual instance that includes Latin and English. We evaluate all models on morphological and syntactic tasks, including lemmatization, which demonstrates the added value of T5's decoding abilities. We further define two probing tasks to investigate the knowledge acquired by models pre-trained on Classical texts. Our experiments provide the first benchmarking analysis of existing models of Ancient Greek. Results show that our models provide significant improvements over the SoTA. The systematic analysis of model types can inform future research in designing language models for Classical languages, including the development of novel generative tasks. We make all our models available as community resources, along with a large curated pre-training corpus for Ancient Greek, to support the creation of a larger, comparable model zoo for Classical Philology.}
+@article{clarkCaninePretrainingEfficient2022,
+  title = {Canine: {{Pre-training}} an {{Efficient Tokenization-Free Encoder}} for {{Language Representation}}},
+  author = {Clark, Jonathan H. and Garrette, Dan and Turc, Iulia and Wieting, John},
+  year = {2022},
+  month = jan,
+  journal = {Transactions of the Association for Computational Linguistics},
+  volume = {10},
+  pages = {73--91},
+  issn = {2307-387X},
+  doi = {10.1162/tacl_a_00448},
+  urldate = {2024-01-09},
+  abstract = {Pipelined NLP systems have largely been superseded by end-to-end neural modeling, yet nearly all commonly used models still require an explicit tokenization step. While recent tokenization approaches based on data-derived subword lexicons are less brittle than manually engineered tokenizers, these techniques are not equally suited to all languages, and the use of any fixed vocabulary may limit a model's ability to adapt. In this paper, we present Canine, a neural encoder that operates directly on character sequences{\textemdash}without explicit tokenization or vocabulary{\textemdash}and a pre-training strategy that operates either directly on characters or optionally uses subwords as a soft inductive bias. To use its finer-grained input effectively and efficiently, Canine combines downsampling, which reduces the input sequence length, with a deep transformer stack, which encodes context. Canine outperforms a comparable mBert model by 5.7 F1 on TyDi QA, a challenging multilingual benchmark, despite having fewer model parameters.}
 }
 
-@misc{riemenschneiderGraeciaCaptaFerum2023,
-  title = {Graecia Capta Ferum Victorem Cepit. {{Detecting}} {{Latin}} Allusions to {{Ancient Greek}} Literature},
-  author = {Riemenschneider, Frederick and Frank, Anette},
-  year = {2023},
-  eprint = {2308.12008},
-  primaryclass = {cs.CL},
-  archiveprefix = {arxiv},
-  langid = {english}
+@article{cohen1960coefficient,
+  title={A coefficient of agreement for nominal scales},
+  author={Cohen, Jacob},
+  journal={Educational and psychological measurement},
+  volume={20},
+  number={1},
+  pages={37--46},
+  year={1960},
+  publisher={Sage Publications Sage CA: Thousand Oaks, CA},
+  url = {https://psycnet.apa.org/doi/10.1177/001316446002000104}
 }
 
 @inproceedings{devlinBERTPretrainingDeep2019,
@@ -643,17 +675,27 @@ For other works referenced above, see the following:
   abstract = {We introduce a new language representation model called BERT, which stands for Bidirectional Encoder Representations from Transformers. Unlike recent language representation models (Peters et al., 2018a; Radford et al., 2018), BERT is designed to pre-train deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. As a result, the pre-trained BERT model can be fine-tuned with just one additional output layer to create state-of-the-art models for a wide range of tasks, such as question answering and language inference, without substantial task-specific architecture modifications. BERT is conceptually simple and empirically powerful. It obtains new state-of-the-art results on eleven natural language processing tasks, including pushing the GLUE score to 80.5 (7.7 point absolute improvement), MultiNLI accuracy to 86.7\% (4.6\% absolute improvement), SQuAD v1.1 question answering Test F1 to 93.2 (1.5 point absolute improvement) and SQuAD v2.0 Test F1 to 83.1 (5.1 point absolute improvement).},
 }
 
-@article{clarkCaninePretrainingEfficient2022,
-  title = {Canine: {{Pre-training}} an {{Efficient Tokenization-Free Encoder}} for {{Language Representation}}},
-  author = {Clark, Jonathan H. and Garrette, Dan and Turc, Iulia and Wieting, John},
-  year = {2022},
-  month = jan,
-  journal = {Transactions of the Association for Computational Linguistics},
-  volume = {10},
-  pages = {73--91},
-  issn = {2307-387X},
-  doi = {10.1162/tacl_a_00448},
-  urldate = {2024-01-09},
-  abstract = {Pipelined NLP systems have largely been superseded by end-to-end neural modeling, yet nearly all commonly used models still require an explicit tokenization step. While recent tokenization approaches based on data-derived subword lexicons are less brittle than manually engineered tokenizers, these techniques are not equally suited to all languages, and the use of any fixed vocabulary may limit a model's ability to adapt. In this paper, we present Canine, a neural encoder that operates directly on character sequences{\textemdash}without explicit tokenization or vocabulary{\textemdash}and a pre-training strategy that operates either directly on characters or optionally uses subwords as a soft inductive bias. To use its finer-grained input effectively and efficiently, Canine combines downsampling, which reduces the input sequence length, with a deep transformer stack, which encodes context. Canine outperforms a comparable mBert model by 5.7 F1 on TyDi QA, a challenging multilingual benchmark, despite having fewer model parameters.}
+@inproceedings{riemenschneiderExploringLargeLanguage2023a,
+  title = {Exploring Large Language Models for Classical Philology},
+  booktitle = {Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: {{Long}} Papers)},
+  author = {Riemenschneider, Frederick and Frank, Anette},
+  editor = {Rogers, Anna and {Boyd-Graber}, Jordan and Okazaki, Naoaki},
+  year = {2023},
+  month = jul,
+  pages = {15181--15199},
+  publisher = {{Association for Computational Linguistics}},
+  address = {{Toronto, Canada}},
+  doi = {10.18653/v1/2023.acl-long.846},
+  abstract = {Recent advances in NLP have led to the creation of powerful language models for many languages including Ancient Greek and Latin. While prior work on Classical languages unanimously uses BERT, in this work we create four language models for Ancient Greek that vary along two dimensions to study their versatility for tasks of interest for Classical languages: we explore (i) encoder-only and encoder-decoder architectures using RoBERTa and T5 as strong model types, and create for each of them (ii) a monolingual Ancient Greek and a multilingual instance that includes Latin and English. We evaluate all models on morphological and syntactic tasks, including lemmatization, which demonstrates the added value of T5's decoding abilities. We further define two probing tasks to investigate the knowledge acquired by models pre-trained on Classical texts. Our experiments provide the first benchmarking analysis of existing models of Ancient Greek. Results show that our models provide significant improvements over the SoTA. The systematic analysis of model types can inform future research in designing language models for Classical languages, including the development of novel generative tasks. We make all our models available as community resources, along with a large curated pre-training corpus for Ancient Greek, to support the creation of a larger, comparable model zoo for Classical Philology.}
+}
+
+@misc{riemenschneiderGraeciaCaptaFerum2023b,
+  title = {Graecia Capta Ferum Victorem Cepit. {{Detecting}} {{Latin}} Allusions to {{Ancient Greek}} Literature},
+  author = {Riemenschneider, Frederick and Frank, Anette},
+  year = {2023},
+  eprint = {2308.12008},
+  primaryclass = {cs.CL},
+  archiveprefix = {arxiv},
+  langid = {english}
 }
 ```

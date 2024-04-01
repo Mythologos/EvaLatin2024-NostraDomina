@@ -9,6 +9,13 @@ class AnnotatorMessage(NamedEnum):
     REPORT: str = "a flag indicating whether the annotator should report numerical results regarding the data or not"
 
 
+class ComparerMessage(NamedEnum):
+    MODEL_FILEPATH: str = "filepath to a trained Gaussian Mixture Model from scikit-learn " \
+                          "for the emotion polarity detection task"
+    PREDICTIONS_DIRECTORY: str = "path to directory where EvaLatin-style TSV prediction data is contained"
+    TEST_DIRECTORY: str = "path to directory where EvaLatin-style TSV data is contained"
+
+
 class DetectorMessage(NamedEnum):
     BATCH_SIZE: str = "size of batches into which data is collated"
     BIDIRECTIONAL: str = "flag determining whether an LSTM encoder should be monodirectional or bidirectional"
@@ -42,6 +49,7 @@ class GaussianMessage(NamedEnum):
     COMPONENTS: str = "number of distributions (i.e., classes) the Gaussian Mixture Model will incorporate"
     EMBEDDING_FILEPATH: str = "filepath to file or directory containing embedding data; " \
                               "currently only supports word2vec or SPhilBERTa"
+    SAVE_FILEPATH: str = "filepath to location where Gaussian Mixture Model will be saved"
     SEED_FILEPATH: str = "filepath to labeled data used for training the Gaussian Mixture Model"
     RANDOM_SEEDS: str = "the number of random seeds used to generate initial random states " \
                         "for the Gaussian mixture Model"
