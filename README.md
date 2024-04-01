@@ -416,11 +416,12 @@ However, extensions of this code should be aware of it so that they may correct 
 
 In this section, we present our scorer for the results of the emotion polarity detection task (`polarity_scorer.py`), 
 our comparer for our Gaussian clustering model and our neural models, and our visualizer for our classification task results (`results_visualizer.py`). 
-Although the organizers provided a scorer for results, we created an additional one so that we could compute the macro-averages that they did alongside additional statistics.
+Although the organizers provided a scorer for results, we created an additional one to compute further statistics.
 
 #### Polarity Scorer
 
-This interface to our polarity scorer is given below. Note that this interface is largely tailored to the scoring format given by the EvaLatin 2024 shared task organizers. 
+This interface to our polarity scorer is given below. 
+Note that this interface is largely tailored to the scoring format given by the EvaLatin 2024 shared task organizers. 
 Moreover, its subsets are restricted to those given in the test set of the shared task.
 However, it can be used on other directories or files of TSV data in the same format.
 It computes and displays Macro-F1 and Micro-F1 scores across the selected and filtered files.
@@ -437,11 +438,14 @@ options:
                         subsets of the EvaLatin 2024 emotion polarity detection test set to exclusively evaluate on; all available documents are used if no subsets are given
 ```
 
+Note that the scores produced by this tool may not match the scores of the organizers when applied to the full dataset, 
+as such scores proceed through additional averaging steps.
+
 #### Results Comparer
 
 The interface for our results comparer is given below. Currently, it is only meant to function with a Gaussian model, whose classifications are derived on-the-fly, 
 and some other model whose predictions have been outputted to EvaLatin's standardized TSV format.
-This interface displays both the Macro F1 score for the Gaussian model and Cohen's kappa (Cohen, 1960) for the pair of models, accounting for chance agreement.
+This interface displays both the Macro-F1 score for the Gaussian model and Cohen's kappa (Cohen, 1960) for the pair of models, accounting for chance agreement.
 
 ```
 >>> python results_comparer.py -h  
