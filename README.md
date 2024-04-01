@@ -7,8 +7,10 @@
 
 ## Summary
 
-This is a repository for the LT4HALA 2024 workshop paper, **"Nostra Domina at EvaLatin 2024: Improving Latin Polarity Detection through Data Augmentation."**
-It includes:
+This is a repository for the LT4HALA 2024 workshop paper, **"Nostra Domina at EvaLatin 2024: Improving Latin Polarity Detection through Data Augmentation."** 
+This work participated in the EvaLatin 2024 shared task on emotion polarity detection (Sprugnoli, Iurescia, and Passarotti, 2024).
+
+Our repository includes:
 - the automatically-annotated data generated as a part of the paper (see `data/polarity/training`) 
 - the tools applied to generate and process that data, including the novel polarity coordinate clustering method (see `gaussian_annotator.py`, `polarity_annotator.py`, and `polarity_splitter.py`)
 - the process used to train and tune neural networks on this data (see `polarity_detector.py` and `trial_generator.py`)
@@ -517,6 +519,20 @@ To cite this repository, please use the following citation:
   abstract = {This paper describes submissions from the team Nostra Domina to the EvaLatin 2024 shared task of emotion polarity detection. Given the low-resource environment of Latin and the complexity of sentiment in rhetorical genres like poetry, we augmented the available data through automatic polarity annotation. We present two methods for doing so on the basis of the k-means algorithm, and we employ a variety of Latin large language models (LLMs) in a neural architecture to better capture the underlying contextual sentiment representations. Our best approach achieved the second highest macro-averaged Macro-F{\textbackslash}textsubscript\{1\} score on the shared task's test set.},
   langid = {english},
   annotation = {To appear.}
+}
+```
+
+For the shared task that this work was involved in, please refer to the following work:
+```bibtex
+@inproceedings{sprugnoliOverviewEvaLatin2024, 
+  title = "Overview of the {E}va{L}atin 2024 Evaluation Campaign",
+  author = "Sprugnoli, Rachele and Iurescia, Federica and Passarotti, Marco", 
+  editor = "Sprugnoli, Rachele and Passarotti, Marco", 
+  booktitle = "Proceedings of the Third Workshop on Language Technologies for Historical and Ancient Languages – LT4HALA 2024", 
+  month = may, 
+  year = "2024", 
+  address = "Torino, Italy", 
+  publisher = "European Language Resources Association"
 }
 ```
 
