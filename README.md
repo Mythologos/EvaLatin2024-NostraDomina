@@ -7,7 +7,7 @@
 
 ## Summary
 
-This is a repository for the LT4HALA 2024 workshop paper, **"Nostra Domina at EvaLatin 2024: Improving Latin Polarity Detection through Semi-Supervised Data Augmentation."**
+This is a repository for the LT4HALA 2024 workshop paper, **"Nostra Domina at EvaLatin 2024: Improving Latin Polarity Detection through Data Augmentation."**
 It includes:
 - the automatically-annotated data generated as a part of the paper (see `data/polarity/training`) 
 - the tools applied to generate and process that data, including the novel polarity coordinate clustering method (see `gaussian_annotator.py`, `polarity_annotator.py`, and `polarity_splitter.py`)
@@ -502,15 +502,15 @@ and we are happy to provide clarifications or assistance in reproducing our resu
 To cite this repository, please use the following citation:
 
 ```bibtex
-@inproceedings{bothwellImprovingLatinPolarity2024,
-  title = {Nostra Domina at EvaLatin 2024: Improving {{Latin}} Polarity Detection through Semi-Supervised Data Augmentation},
+@inproceedings{bothwellNostraDominaEvaLatin2024,
+  title = {Nostra {{Domina}} at {{EvaLatin}} 2024: {{Improving Latin}} Polarity Detection through Data Augmentation},
   booktitle = {Proceedings of the Third Workshop on Language Technologies for Historical and Ancient Languages},
   author = {Bothwell, Stephen and Swenor, Abigail and Chiang, David},
   year = {2024},
   month = may,
   publisher = {European Language Resources Association},
   address = {Turin, Italy},
-  abstract = {This paper describes submissions from the team Nostra Domina to the EvaLatin 2024 shared task of emotion polarity detection. Given the low-resource environment of Latin and the complexity of sentiment in rhetorical genres like poetry, we augmented the available sentiment data through semi-supervised polarity annotation. We present two methods for doing so on the basis of the \$k\$-means algorithm, and we employ a variety of Latin large language models (LLMs) in a neural architecture to better capture the underlying contextual sentiment representations. Our approach achieved the second best Macro-F{\textbackslash}textsubscript\{1\} score on the shared task's test set.},
+  abstract = {This paper describes submissions from the team Nostra Domina to the EvaLatin 2024 shared task of emotion polarity detection. Given the low-resource environment of Latin and the complexity of sentiment in rhetorical genres like poetry, we augmented the available data through automatic polarity annotation. We present two methods for doing so on the basis of the k-means algorithm, and we employ a variety of Latin large language models (LLMs) in a neural architecture to better capture the underlying contextual sentiment representations. Our best approach achieved the second highest macro-averaged Macro-F{\textbackslash}textsubscript\{1\} score on the shared task's test set.},
   langid = {english},
   annotation = {To appear.}
 }
